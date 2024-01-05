@@ -67,7 +67,8 @@
             this.exportAllAsOMOToolStripMenuItem.Name = "exportAllAsOMOToolStripMenuItem";
             this.exportAllAsOMOToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.exportAllAsOMOToolStripMenuItem.Text = "Export All as OMO";
-            this.exportAllAsOMOToolStripMenuItem.Click += new System.EventHandler(this.exportAllAsOMOToolStripMenuItem_Click);
+            this.exportAllAsOMOToolStripMenuItem.Tag = "omo";
+            this.exportAllAsOMOToolStripMenuItem.Click += new System.EventHandler(this.exportAllAnims);
             // 
             // createAnimationGroupToolStripMenuItem
             // 

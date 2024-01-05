@@ -27,17 +27,27 @@ namespace SmashForge
 
             // Import Animation
 
-            MenuItem exportAll = new MenuItem("Export All as OMO");
-            exportAll.Click += exportAllAsOMOToolStripMenuItem_Click;
-            m.MenuItems.Add(exportAll);
+            MenuItem exportAllOmo = new MenuItem("Export All as OMO")
+            {
+                Tag = "omo"
+            };
+            exportAllOmo.Click += exportAllAnims;
+            m.MenuItems.Add(exportAllOmo);
 
-            MenuItem exportAllSmd = new MenuItem("Export All as SMD");
-            exportAllSmd.Click += exportAllAsSMDToolStripMenuItem_Click;
+            MenuItem exportAllSmd = new MenuItem("Export All as SMD")
+            {
+                Tag = "smd"
+            };
+            exportAllSmd.Click += exportAllAnims;
             m.MenuItems.Add(exportAllSmd);
 
-            MenuItem exportAllAnim = new MenuItem("Export All as ANIM");
-            exportAllAnim.Click += exportAllAsANIMToolStripMenuItem_Click;
+            MenuItem exportAllAnim = new MenuItem("Export All as ANIM")
+            {
+                Tag = "anim"
+            };
+            exportAllAnim.Click += exportAllAnims;
             m.MenuItems.Add(exportAllAnim);
+
 
             MenuItem createAg = new MenuItem("Create Animation Group");
             createAg.Click += createAnimationGroupToolStripMenuItem_Click;
@@ -301,9 +311,13 @@ namespace SmashForge
                 }
             }*/
         }
-
-        private void exportAllAsOMOToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exportAllAnims(object sender, EventArgs e)
         {
+            if (Runtime.TargetVbn == null)
+            {
+                MessageBox.Show("You must have a bone-set (VBN) selected to save animations.");
+                return;
+            }
             using (var ofd = new FolderSelectDialog())
             {
                 ofd.Title = "Character Folder";
@@ -315,55 +329,23 @@ namespace SmashForge
                     {
                         foreach (TreeNode a in v.Nodes)
                         {
-                            if (a is Animation)
-                                OMOOld.createOMO(((Animation)a), Runtime.TargetVbn, path + "\\" + a.Text + ".omo");
-                        }        
-                    }
-                }
-            }
-        }
-        private void exportAllAsSMDToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (var ofd = new FolderSelectDialog())
-            {
-                ofd.Title = "Character Folder";
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    string path = ofd.SelectedPath;
-                    foreach (TreeNode v in treeView1.Nodes)
-                    {
-                        foreach (TreeNode a in v.Nodes)
-                        {
-                            if (a is Animation)
+                            if (a is Animation) 
                             {
-                                Smd.Save(((Animation)a), Runtime.TargetVbn, path + "\\" + a.Text.Replace(".omo", "") + ".smd");
-                            }
-                        }
-                    }           
-                }
-            }
-        }
-
-        private void exportAllAsANIMToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (var ofd = new FolderSelectDialog())
-            {
-                ofd.Title = "Character Folder";
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    string path = ofd.SelectedPath;
-                    foreach (TreeNode b in treeView1.Nodes)
-                    {
-                        foreach (TreeNode v in b.Nodes)
-                        {
-                            foreach (TreeNode f in v.Nodes)
-                            {
-                                foreach (TreeNode a in f.Nodes)
+                                switch ((sender as MenuItem).Tag as String)
                                 {
-                                    if (a is Animation)
-                                        ANIM.CreateANIM(path + "\\" + a.Text + ".anim", ((Animation)a), Runtime.TargetVbn);
+                                    case "omo":
+                                        OMOOld.createOMO(((Animation)a), Runtime.TargetVbn, path + "\\" + a.Text);
+                                        break;
+                                    case "smd":
+                                        Smd.Save(((Animation)a), Runtime.TargetVbn, path + "\\" + a.Text.Replace(".omo", ".smd"));
+                                        break;
+                                    case "anim":
+                                        ANIM.CreateANIM(path + "\\" + a.Text.Replace(".omo", ".anim"), ((Animation)a), Runtime.TargetVbn);
+                                        break;
+                                    default:
+                                        break;
                                 }
-                            }
+                            }   
                         }
                     }
                 }
