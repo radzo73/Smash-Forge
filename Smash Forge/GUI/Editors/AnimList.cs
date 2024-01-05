@@ -330,19 +330,13 @@ namespace SmashForge
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     string path = ofd.SelectedPath;
-                    foreach (TreeNode b in treeView1.Nodes)
+                    foreach (TreeNode v in treeView1.Nodes)
                     {
-                        foreach (TreeNode v in b.Nodes)
+                        foreach (TreeNode a in v.Nodes)
                         {
-                            foreach (TreeNode f in v.Nodes)
+                            if (a is Animation)
                             {
-                                foreach (TreeNode a in f.Nodes)
-                                {
-                                    if (a is Animation)
-                                    {
-                                        Smd.Save(((Animation)a), Runtime.TargetVbn, path + "\\" + a.Text + ".smd");
-                                    }
-                                }
+                                Smd.Save(((Animation)a), Runtime.TargetVbn, path + "\\" + a.Text.Replace(".omo", "") + ".smd");
                             }
                         }
                     }           
